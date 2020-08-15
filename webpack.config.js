@@ -3,6 +3,7 @@ const path = require('path');
 const isProd = process.env.mode === "production";
 
 module.exports = {
+    target: "node",
     mode: isProd ? "production" : "development",
     entry: './src/index.ts',
     output: {
@@ -17,5 +18,13 @@ module.exports = {
                 exclude: /node_modules/,
             },
         ]
-    }
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    node: {
+        __dirname: false,
+        __filename: false,
+    },
+
 };
