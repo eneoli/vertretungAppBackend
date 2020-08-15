@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "es2018"
+    ],
+    "strict": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "alwaysStrict": true,
+    "noEmit": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "types": [
+    ]
+  },
+  "include": [
+    "./**/*"
+  ],
+  "files": [
+    "./graphql/schema/schema.d.ts"
+  ]
+}
