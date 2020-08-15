@@ -14,16 +14,16 @@ export function applyControllers(app: Application, controllers: typeof Controlle
     for (const meta of controllerMeta) {
         switch (meta.httpMethod) {
             case HTTPMethods.get:
-                app.get(meta.path, meta.method);
+                app.get(meta.path, meta.method.bind(meta.controller));
                 break;
             case HTTPMethods.post:
-                app.post(meta.path, meta.method);
+                app.post(meta.path, meta.method.bind(meta.controller));
                 break;
             case HTTPMethods.put:
-                app.put(meta.path, meta.method);
+                app.put(meta.path, meta.method.bind(meta.controller));
                 break;
             case HTTPMethods.delete:
-                app.delete(meta.path, meta.method);
+                app.delete(meta.path, meta.method.bind(meta.controller));
 
         }
     }
