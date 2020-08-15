@@ -23,30 +23,32 @@ export class MoodleSession {
     }
 
     public async obtainMoodleSession(username: string, password: string) {
-        let moodleSession: string;
+        let freshSession: string;
         let logintoken: string;
-        [moodleSession, logintoken] = await this.getFreshSession();
+        [freshSession, logintoken] = await this.getFreshSession();
 
+        // build login query
         const params = new URLSearchParams();
         params.append('username', username);
         params.append('password', password);
         params.append('logintoken', logintoken);
         params.append('anchor', '');
 
-        console.log(moodleSession);
-        console.log(params.toString());
         const firstResponse = await axios.post(this.settings.moodle.loginUrl, params.toString(), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                Cookie: 'MoodleSession=' + moodleSession,
+                Cookie: 'MoodleSession=' + freshSession,
             },
             maxRedirects: 0,
             withCredentials: true,
-            validateStatus: () => true,
+            validateStatus: () => true, // axios thinks HTTP 303 is an error --> its not!
         });
+
+        // moodle changes session on post request
         const finalSession = this.extractMoodleSessionCookie(firstResponse.headers['set-cookie'][0]);
         const cookieTestUrl = firstResponse.headers.location;
 
+        // moodle checks if session valid
         await axios.get(cookieTestUrl, {
             headers: {
                 Cookie: 'MoodleSession=' + finalSession,
