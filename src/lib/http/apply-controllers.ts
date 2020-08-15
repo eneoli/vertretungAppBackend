@@ -12,19 +12,20 @@ export function applyControllers(app: Application, controllers: typeof Controlle
 
     const controllerMeta = ControllerMetaStore.instance.getControllers();
     for (const meta of controllerMeta) {
+        const scope = cx.find((e) => meta.controller.isPrototypeOf(e));
         switch (meta.httpMethod) {
             case HTTPMethods.get:
-                app.get(meta.path, meta.method.bind(meta.controller));
+                app.get(meta.path, meta.method.bind(scope));
                 break;
             case HTTPMethods.post:
-                app.post(meta.path, meta.method.bind(meta.controller));
+                app.post(meta.path, meta.method.bind(scope));
                 break;
             case HTTPMethods.put:
-                app.put(meta.path, meta.method.bind(meta.controller));
+                app.put(meta.path, meta.method.bind(scope));
                 break;
             case HTTPMethods.delete:
-                app.delete(meta.path, meta.method.bind(meta.controller));
-
+                app.delete(meta.path, meta.method.bind(scope));
+                break;
         }
     }
 }
