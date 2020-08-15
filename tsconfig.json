@@ -17,14 +17,11 @@
     "noEmit": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "types": [
     ]
   },
   "include": [
     "./**/*"
-  ],
-  "files": [
-    "./graphql/schema/schema.d.ts"
   ]
 }
