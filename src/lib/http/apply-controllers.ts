@@ -1,4 +1,4 @@
-import {ControllerStore} from './controller-store';
+import {ControllerMetaStore} from './controller-meta-store';
 import {Application} from 'express';
 import {Controller} from './Controller';
 import {HTTPMethods} from './HTTTPMethods';
@@ -10,20 +10,20 @@ export function applyControllers(app: Application, controllers: typeof Controlle
         cx.push(new controller());
     }
 
-    const controllerMeta = ControllerStore.instance.getControllers();
+    const controllerMeta = ControllerMetaStore.instance.getControllers();
     for (const meta of controllerMeta) {
         switch (meta.httpMethod) {
             case HTTPMethods.get:
-                app.get(meta.path, meta.controller[meta.method]);
+                app.get(meta.path, meta.method);
                 break;
             case HTTPMethods.post:
-                app.post(meta.path, meta.controller[meta.method]);
+                app.post(meta.path, meta.method);
                 break;
             case HTTPMethods.put:
-                app.put(meta.path, meta.controller[meta.method]);
+                app.put(meta.path, meta.method);
                 break;
             case HTTPMethods.delete:
-                app.delete(meta.path, meta.controller[meta.method]);
+                app.delete(meta.path, meta.method);
 
         }
     }

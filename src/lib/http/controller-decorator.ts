@@ -1,16 +1,14 @@
-import {ControllerStore} from './controller-store';
+import {ControllerMetaStore} from './controller-meta-store';
 import {HTTPMethods} from './HTTTPMethods';
+import {Controller} from './Controller';
 
 export function Route(path: string, method: HTTPMethods) {
-    return (target: any, name: string, descriptor: PropertyDescriptor) => {
-        ControllerStore.instance.addController({
+    return (target: Controller, _name: string, descriptor: PropertyDescriptor) => {
+        ControllerMetaStore.instance.addController({
             path: path,
             httpMethod: method,
             controller: target,
-            method: name,
+            method: descriptor.value,
         });
-        console.log(target);
-        console.log(name);
-        console.log(descriptor);
     }
 }

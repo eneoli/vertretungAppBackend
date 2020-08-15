@@ -1,24 +1,25 @@
 import {Controller} from './Controller';
 import {HTTPMethods} from './HTTTPMethods';
+import {Request, Response} from 'express';
 
 interface ControllerMeta {
     controller: Controller;
     path: string;
     httpMethod: HTTPMethods,
-    method: string;
+    method: (reg: Request, res: Response) => void;
 }
 
-export class ControllerStore {
-    private static __instance: ControllerStore;
+export class ControllerMetaStore {
+    private static __instance: ControllerMetaStore;
 
     private controllers: ControllerMeta[] = [];
 
     public static get instance() {
-        if (!ControllerStore.__instance) {
-            ControllerStore.__instance = new ControllerStore();
+        if (!ControllerMetaStore.__instance) {
+            ControllerMetaStore.__instance = new ControllerMetaStore();
         }
 
-        return ControllerStore.__instance;
+        return ControllerMetaStore.__instance;
     }
 
     public addController(controllerMeta: ControllerMeta) {
