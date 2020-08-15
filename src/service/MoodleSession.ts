@@ -11,13 +11,19 @@ export class MoodleSession {
         this.settings = settings;
     }
 
-    private extractMoodleSessionCookie(cookieString: string) {
-        return cookieString.replace('MoodleSession=', '').split(';')[0]
+    private extractMoodleSessionCookie(headers: { 'set-cookie': [string] }) {
+        try {
+            return headers['set-cookie'][0].replace('MoodleSession=', '').split(';')[0]
+        } catch (e) {
+            throw new Error('Falsche Serverantwort');
+        }
     }
 
     private async getFreshSession() {
-        const loginResponse = await axios.get(this.settings.moodle.loginUrl);
-        const moodleSession = this.extractMoodleSessionCookie(loginResponse.headers['set-cookie'][0]);
+        const loginResponse = await axios.get(this.settings.moodle.loginUrl).catch(() => {
+            throw new Error('Server hat nicht geantwortet')
+        });
+        const moodleSession = this.extractMoodleSessionCookie(loginResponse.headers);
         const logintoken = cheerio.load(loginResponse.data)('input[name="logintoken"]').first().val();
         return [moodleSession, logintoken];
     }
@@ -42,17 +48,26 @@ export class MoodleSession {
             maxRedirects: 0,
             withCredentials: true,
             validateStatus: () => true, // axios thinks HTTP 303 is an error --> its not!
+        }).catch(() => {
+            throw new Error('Server hat nicht geantwortet')
         });
 
-        // moodle changes session on post request
-        const finalSession = this.extractMoodleSessionCookie(firstResponse.headers['set-cookie'][0]);
         const cookieTestUrl = firstResponse.headers.location;
+
+        if (cookieTestUrl === this.settings.moodle.loginUrl) {
+            throw new Error('Benutzername oder Passwort falsch!');
+        }
+
+        // moodle changes session on post request
+        const finalSession = this.extractMoodleSessionCookie(firstResponse.headers);
 
         // moodle checks if session valid
         await axios.get(cookieTestUrl, {
             headers: {
                 Cookie: 'MoodleSession=' + finalSession,
             }
+        }).catch(() => {
+            throw new Error('Server hat nicht geantwortet')
         });
 
         return finalSession;
