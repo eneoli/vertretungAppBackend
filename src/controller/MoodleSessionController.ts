@@ -6,15 +6,19 @@ import {MoodleSession} from '../service/MoodleSession';
 import {Settings} from '../service/Settings';
 import {ParamsDictionary} from 'express-serve-static-core';
 
-interface Query extends ParamsDictionary {
+interface CreatQuery extends ParamsDictionary {
     username: string;
     password: string;
+}
+
+interface ValidateQuery {
+    moodleSession: string;
 }
 
 export class MoodleSessionController extends Controller {
 
     @Route('/moodleSession', HTTPMethods.get)
-    public async onSession(req: Request<{}, {}, {}, Query>, res: Response) {
+    public async onSession(req: Request<{}, {}, {}, CreatQuery>, res: Response) {
         const username: string = req.query.username;
         const password: string = req.query.password;
 
@@ -25,6 +29,25 @@ export class MoodleSessionController extends Controller {
         try {
             const moodleSession = await session.obtainMoodleSession(username, password);
             res.json({moodleSession});
+        } catch (e) {
+            res.json({
+                error: e.message,
+            });
+        }
+    }
+
+    @Route('/validateSession', HTTPMethods.get)
+    public async isSessionValid(req: Request<{}, {}, {}, ValidateQuery>, res: Response) {
+
+        const settings = new Settings();
+        settings.load('./config.yml');
+        const session = new MoodleSession(settings);
+
+        const moodleSession = req.query.moodleSession;
+        try {
+            res.json({
+                valid: await session.isValid(moodleSession)
+            });
         } catch (e) {
             res.json({
                 error: e.message,
