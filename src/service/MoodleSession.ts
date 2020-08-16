@@ -72,4 +72,20 @@ export class MoodleSession {
 
         return finalSession;
     }
+
+    public async isValid(moodleSession: string): Promise<boolean> {
+        const response = await axios.get(this.settings.moodle.todayUrl, {
+            headers: {
+                Cookie: 'MoodleSession=' + moodleSession,
+            },
+            maxRedirects: 0,
+            validateStatus: () => true, // axios thinks HTTP 303 is an error --> its not!
+        }).catch(() => {
+            throw new Error('Moodle Server hat nicht geantwortet')
+        });
+
+        console.log(response.data);
+
+        return response.headers.location !== this.settings.moodle.loginUrl;
+    }
 }
