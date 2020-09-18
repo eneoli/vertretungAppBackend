@@ -1,3 +1,4 @@
+import express from 'express';
 import * as bodyParser from 'body-parser';
 import {createHttpServer} from './create-http-server';
 import {DefaultController} from './controller/DefaultController';
@@ -11,6 +12,7 @@ const server = createHttpServer();
 
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
+server.use('/webapp', express.static(__dirname + '/public'));
 
 applyControllers(server, [
     DefaultController,
