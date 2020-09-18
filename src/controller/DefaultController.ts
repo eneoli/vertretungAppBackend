@@ -6,8 +6,13 @@ import {Controller} from '../lib/http/Controller';
 
 export class DefaultController extends Controller {
 
-    @Route('/test', HTTPMethods.get)
+    @Route('/', HTTPMethods.get)
     public onIndex(_req: Request, res: Response) {
+        res.redirect('/webapp');
+    }
+
+    @Route('/test', HTTPMethods.get)
+    public onTest(_req: Request, res: Response) {
         res.send('It works!');
     }
 }
