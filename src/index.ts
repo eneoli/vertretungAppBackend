@@ -6,7 +6,9 @@ import {applyControllers} from './lib/http/apply-controllers';
 import {MoodleSessionController} from './controller/MoodleSessionController';
 import {SubstitutionPlanController} from './controller/SubstitutionPlanController';
 import {SecurityController} from './controller/SecurityController';
+import {bootstrapServiceLocator} from './bootstrap-service-locator';
 
+bootstrapServiceLocator();
 
 const server = createHttpServer();
 

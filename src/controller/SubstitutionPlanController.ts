@@ -6,6 +6,7 @@ import {ParamsDictionary} from 'express-serve-static-core';
 import {PlanParser} from '../service/PlanParser';
 import axios from 'axios';
 import {Settings} from '../service/Settings';
+import {di} from '../bootstrap-service-locator';
 
 interface Params extends ParamsDictionary {
     day: string;
@@ -27,8 +28,7 @@ export class SubstitutionPlanController extends Controller {
 
     constructor() {
         super();
-        this.settings = new Settings();
-        this.settings.load('./config.yml');
+        this.settings = di.get(Settings);
     }
 
     @Route('/fetch/:day', HTTPMethods.get)

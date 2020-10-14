@@ -2,13 +2,14 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import {Settings} from './Settings';
 import {URLSearchParams} from 'url';
+import {di} from '../bootstrap-service-locator';
 
 export class MoodleSession {
 
     private settings: Settings;
 
-    constructor(settings: Settings) {
-        this.settings = settings;
+    constructor() {
+        this.settings = di.get(Settings);
     }
 
     private extractMoodleSessionCookie(headers: { 'set-cookie': [string] }) {
@@ -83,8 +84,6 @@ export class MoodleSession {
         }).catch(() => {
             throw new Error('Moodle Server hat nicht geantwortet')
         });
-
-        console.log(response.data);
 
         return response.headers.location !== this.settings.moodle.loginUrl;
     }

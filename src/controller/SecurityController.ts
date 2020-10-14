@@ -3,7 +3,7 @@ import {Route} from '../lib/http/controller-decorator';
 import {HTTPMethods} from '../lib/http/HTTTPMethods';
 import {Request, Response} from 'express';
 import {KeyManager} from '../service/KeyManager';
-import {Settings} from '../service/Settings';
+import {di} from '../bootstrap-service-locator';
 
 export class SecurityController extends Controller {
 
@@ -11,10 +11,7 @@ export class SecurityController extends Controller {
 
     constructor() {
         super();
-        // FIXME better: di
-        const settings = new Settings();
-        settings.load(__dirname + '/config.yml');
-        this.keyManager = new KeyManager(settings);
+        this.keyManager = di.get(KeyManager);
     }
 
     @Route('/publicKey', HTTPMethods.get)

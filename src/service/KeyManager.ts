@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import {Settings} from './Settings';
+import {di} from '../bootstrap-service-locator';
 
 export class KeyManager {
 
     private settings: Settings;
 
-    constructor(settings: Settings) {
-        this.settings = settings;
+    constructor() {
+        this.settings = di.get(Settings);
     }
 
     public getPublicKey(): string {
