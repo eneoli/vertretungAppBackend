@@ -1,0 +1,7 @@
+moodle:
+  loginUrl: https://www.mysite.de/moodle/login/index.php
+  todayUrl: https://www.mysite.de/moodle/pluginfile.php/2270/mod_resource/content/9/LZ1.html
+  tomorrowUrl: https://www.mysite.de/moodle/pluginfile.php/4518/mod_resource/content/11/LZ2.html
+security:
+  publicKeyPath: ./public.pem
+  privateKeyPath: ./private.pem
